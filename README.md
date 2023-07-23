@@ -1,0 +1,1 @@
+Example project to show redis cacheing in fastapi.
