@@ -1,15 +1,16 @@
 import asyncio
 import functools
-from redis import asyncio as async_redis
 from typing import Any, Optional, Callable
 import pickle
 
-import redis_connection
+from redis.asyncio.client import Redis
+
+from server.redis_client import connection_pool
 
 
-async def get_object(key: str, r: Optional[async_redis.Redis] = None) -> Optional[Any]:
+async def get_object(key: str, r: Optional[Redis] = None) -> Optional[Any]:
     # get an object from redis based on a key
-    redis = r or redis_connection.get_redis_connection()
+    redis = r or connection_pool.get_redis_connection()
     binary_obj = await redis.get(key)
 
     # convert the binary object to a python object using pickle
@@ -19,7 +20,7 @@ async def get_object(key: str, r: Optional[async_redis.Redis] = None) -> Optiona
 async def save_object(
         key: str, obj: Any, expire: Optional[int] = 0
 ) -> None:
-    redis = redis_connection.get_redis_connection()
+    redis = connection_pool.get_redis_connection()
 
     # convert a python object to binary
     binary_object = pickle.dumps(obj)

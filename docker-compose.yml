@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  redis:
+    hostname: redis
+    image: redis:7.0-alpine
+    ports:
+      - 6381:6379
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+
+  unit-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tests
+    environment:
+      REDIS_HOST: redis
+    image: unit-tests:latest
+    depends_on:
+      redis:
+        condition: service_healthy

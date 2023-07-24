@@ -2,6 +2,8 @@ from typing import Optional
 
 from redis import asyncio
 
+from server.redis_client.settings import redis_settings
+
 # thread safe global connection pool
 _REDIS_CONNECTION_POOL: Optional[asyncio.ConnectionPool] = None
 
@@ -10,7 +12,7 @@ def start_redis_connection_pool() -> None:
     # Intended to be called during the application startup process
     global _REDIS_CONNECTION_POOL
     if not _REDIS_CONNECTION_POOL:
-        _REDIS_CONNECTION_POOL = asyncio.ConnectionPool()
+        _REDIS_CONNECTION_POOL = asyncio.ConnectionPool(port=redis_settings.port, host=redis_settings.host)
 
 
 async def disconnect_from_redis() -> None:
