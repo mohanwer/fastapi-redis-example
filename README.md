@@ -1,1 +1,1 @@
-Example project to show redis cacheing in fastapi.
+Sample project with fast api / redis / docker.
